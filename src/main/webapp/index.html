@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Campus API - Postman Test Suite</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-main: #333;
+            --card-bg: #fff;
+            --primary: #4F46E5;
+            --get-color: #3b82f6;
+            --post-color: #10b981;
+            --delete-color: #ef4444;
+            --border: #e5e7eb;
+            --success-bg: #d1fae5;
+            --success-text: #065f46;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* New Styles for Status and Overview */
+        .status-banner {
+            background-color: var(--success-bg); 
+            color: var(--success-text);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #a7f3d0;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .status-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .overview-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .overview-card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        .overview-card ul {
+            margin-bottom: 0;
+            padding-left: 1.5rem;
+        }
+        .overview-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Test Card Styles */
+        .test-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .test-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fafafa;
+        }
+        .test-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            color: white;
+        }
+        .badge.get { background-color: var(--get-color); }
+        .badge.post { background-color: var(--post-color); }
+        .badge.delete { background-color: var(--delete-color); }
+        
+        .test-body {
+            padding: 1.5rem;
+        }
+        .endpoint-row {
+            display: flex;
+            background: #f3f4f6;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            word-break: break-all;
+        }
+        .label {
+            font-weight: bold;
+            color: #6b7280;
+            margin-right: 0.5rem;
+        }
+        .status-row {
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        .status-ok { color: #10b981; }
+        .status-error { color: #ef4444; }
+        
+        pre {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .section-title {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #4b5563;
+        }
+        .notes {
+            background-color: #e0f2fe;
+            border-left: 4px solid #38bdf8;
+            padding: 0.75rem 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Smart Campus API Test Suite</h1>
+    <p>Complete 15-Step Postman Testing Guide & Documentation</p>
+</header>
+
+<div class="container">
+
+    <!-- NEW: Server Status Banner -->
+    <div class="status-banner">
+        <div class="status-icon">🟢</div>
+        <div>
+            <strong>System Status: Smart Campus API is currently RUNNING</strong><br>
+            Base Target URL: <code>http://localhost:8080/smart-campus-api/api/v1/</code>
+        </div>
+    </div>
+
+    <!-- NEW: Project Overview -->
+    <div class="overview-card">
+        <h2>Project Overview</h2>
+        <p>The <strong>Smart Campus API</strong> is a RESTful web service developed using Java, JAX-RS, and Maven. It is designed to manage IoT infrastructure across a university campus. This application serves as the central data hub for monitoring campus facilities.</p>
+        
+        <strong>Key Capabilities:</strong>
+        <ul>
+            <li><strong>Room Management:</strong> Create, retrieve, and delete campus rooms (e.g., lecture halls, labs) ensuring strict data integrity (rooms cannot be deleted if sensors are inside).</li>
+            <li><strong>Sensor Tracking:</strong> Register and manage IoT sensors (Temperature, CO2, etc.) linked to specific rooms. Includes status monitoring (Active, Maintenance).</li>
+            <li><strong>Data Telemetry:</strong> Log real-time readings from sensors to build a historical data stream of environmental conditions.</li>
+            <li><strong>Robust Error Handling:</strong> Comprehensive global exception mappers returning clean, professional JSON errors (404, 422, 409, 403, 500) instead of Java stack traces.</li>
+            <li><strong>HATEOAS Discovery:</strong> Auto-navigable API entry points providing dynamic links to related resources.</li>
+        </ul>
+    </div>
+
+    <!-- TEST 1 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>1. Discovery Endpoint</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/</div>
+            <div class="status-row">Expected Status: <span class="status-ok">200 OK</span></div>
+            <div class="notes"><strong>Purpose:</strong> Verify the API entry point and HATEOAS links. Leave body empty.</div>
+        </div>
+    </div>
+
+    <!-- TEST 2 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>2. Create a Room (R1)</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/rooms</div>
+            <div class="status-row">Expected Status: <span class="status-ok">201 Created</span></div>
+            <div class="section-title">Raw JSON Body:</div>
+<pre><code>{
+  "id": "R1",
+  "name": "Lab 1",
+  "capacity": 40
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- TEST 3 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>3. Get All Rooms</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/rooms</div>
+            <div class="status-row">Expected Status: <span class="status-ok">200 OK</span></div>
+            <div class="notes"><strong>Purpose:</strong> Confirm Room R1 was saved in the DataStore.</div>
+        </div>
+    </div>
+
+    <!-- TEST 4 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>4. Get Single Room</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/rooms/R1</div>
+            <div class="status-row">Expected Status: <span class="status-ok">200 OK</span></div>
+        </div>
+    </div>
+
+    <!-- TEST 5 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>5. Create Valid Sensor (S1)</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/sensors</div>
+            <div class="status-row">Expected Status: <span class="status-ok">201 Created</span></div>
+            <div class="section-title">Raw JSON Body:</div>
+<pre><code>{
+  "id": "S1",
+  "type": "Temperature",
+  "status": "ACTIVE",
+  "currentValue": 22.5,
+  "roomId": "R1"
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- TEST 6 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>6. Create Sensor with Invalid Room</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/sensors</div>
+            <div class="status-row">Expected Status: <span class="status-error">422 Unprocessable Entity</span></div>
+            <div class="section-title">Raw JSON Body:</div>
+<pre><code>{
+  "id": "S2",
+  "type": "CO2",
+  "status": "ACTIVE",
+  "currentValue": 30,
+  "roomId": "INVALID"
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- TEST 7 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>7. Get All Sensors</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/sensors</div>
+            <div class="status-row">Expected Status: <span class="status-ok">200 OK</span></div>
+        </div>
+    </div>
+
+    <!-- TEST 8 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>8. Filter Sensors by Type</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/sensors?type=Temperature</div>
+            <div class="status-row">Expected Status: <span class="status-ok">200 OK</span></div>
+            <div class="notes"><strong>Purpose:</strong> Tests your QueryParam filtering logic.</div>
+        </div>
+    </div>
+
+    <!-- TEST 9 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>9. Add Sensor Reading</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/sensors/S1/readings</div>
+            <div class="status-row">Expected Status: <span class="status-ok">201 Created</span></div>
+            <div class="section-title">Raw JSON Body:</div>
+<pre><code>{
+  "value": 25.5
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- TEST 10 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>10. Get Sensor Reading History</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/sensors/S1/readings</div>
+            <div class="status-row">Expected Status: <span class="status-ok">200 OK</span></div>
+        </div>
+    </div>
+
+    <!-- TEST 11 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>11. Maintenance Mode Test</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="notes" style="margin-top:0; margin-bottom:1rem; background-color:#fffbeb; border-color:#f59e0b;">
+                <strong>Two-Step Test:</strong> First create a maintenance sensor, then try to add a reading to it.
+            </div>
+            
+            <div class="section-title">Step 1: Create Maintenance Sensor (URL: /sensors)</div>
+<pre><code>{
+  "id": "S3",
+  "type": "Temperature",
+  "status": "MAINTENANCE",
+  "currentValue": 20,
+  "roomId": "R1"
+}</code></pre>
+
+            <div class="section-title" style="margin-top:1.5rem;">Step 2: Try Adding Reading (URL: /sensors/S3/readings)</div>
+            <div class="status-row" style="margin-top:0.5rem;">Expected Status: <span class="status-error">403 Forbidden</span></div>
+<pre><code>{
+  "value": 30
+}</code></pre>
+        </div>
+    </div>
+
+    <!-- TEST 12 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>12. Delete Room with Sensors</h2>
+            <span class="badge delete">DELETE</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/rooms/R1</div>
+            <div class="status-row">Expected Status: <span class="status-error">409 Conflict</span></div>
+            <div class="notes"><strong>Purpose:</strong> Proves you can't delete a room that isn't empty.</div>
+        </div>
+    </div>
+
+    <!-- TEST 13 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>13. Wrong Content-Type Test</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/rooms</div>
+            <div class="status-row">Expected Status: <span class="status-error">415 Unsupported Media Type</span></div>
+            <div class="notes"><strong>Action required:</strong> In Postman, go to Headers and change <code>Content-Type</code> to <code>text/plain</code>. Put any text in the body.</div>
+        </div>
+    </div>
+
+    <!-- TEST 14 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>14. Invalid Endpoint Test</h2>
+            <span class="badge get">GET</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/unknown-path</div>
+            <div class="status-row">Expected Status: <span class="status-error">404 Not Found</span></div>
+        </div>
+    </div>
+
+    <!-- TEST 15 -->
+    <div class="test-card">
+        <div class="test-header">
+            <h2>15. Global Safety Net / Broken JSON</h2>
+            <span class="badge post">POST</span>
+        </div>
+        <div class="test-body">
+            <div class="endpoint-row"><span class="label">URL:</span> http://localhost:8080/smart-campus-api/api/v1/rooms</div>
+            <div class="status-row">Expected Status: <span class="status-error">500 Internal Server Error</span> (or 400 Bad Request)</div>
+            <div class="section-title">Raw JSON Body (Intentionally broken syntax):</div>
+<pre><code>{
+  "id": "R2",
+  "name": "Broken Lab"
+</code></pre>
+            <div class="notes"><strong>Note:</strong> Leave out the closing bracket <code>}</code> to intentionally break the JSON parser and test your Global Exception Handler.</div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
