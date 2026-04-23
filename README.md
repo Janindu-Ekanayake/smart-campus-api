@@ -21,10 +21,6 @@ The system is implemented using **JAX-RS (Jersey 2.x)** and stores all data **in
 - **Apache Tomcat 9.0.x** (Servlet 4.0 / javax.servlet)
 - NetBeans IDE
 
-> ⚠️ **Tomcat Version Note:** This project uses **Jersey 2.x** with the `javax.*` namespace.  
-> It is compatible with **Tomcat 9.x** (Servlet 4.0).  
-> Do **NOT** use Tomcat 10.x or higher — those require the `jakarta.*` namespace (Jersey 3.x).
-
 ## Base URL
 
 ```text
